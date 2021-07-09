@@ -29,11 +29,15 @@
     }
 
     function onBeforeStart({ event, selection }) {
-        selection.clearSelection()
-        selected.value.clear()
+        // selection.clearSelection()
+        // selected.value.clear()
+
+        // return !event.path.some(item => {
+        //     return item.classList?.contains('selectable');
+        // })
     }
 
-    function onStart({ event, selection }) {
+    function onStart({ event, selection }) {        
         if (!event?.ctrlKey && !event?.metaKey) {
             selection.clearSelection()
             selected.value.clear()
