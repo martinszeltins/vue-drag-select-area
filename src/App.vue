@@ -3,6 +3,7 @@
         class="container"
         :options="{ selectables: '.selectable' }"
         :on-move="onMove"
+        :on-before-start="onBeforeStart"
         :on-start="onStart">
 
         <div
@@ -27,6 +28,11 @@
                        .map(Number)
     }
 
+    function onBeforeStart({ event, selection }) {
+        selection.clearSelection()
+        selected.value.clear()
+    }
+
     function onStart({ event, selection }) {
         if (!event?.ctrlKey && !event?.metaKey) {
             selection.clearSelection()
@@ -45,19 +51,10 @@
 </script>
 
 <style>
-    html,
-    body {
-        width: 100%;
-        height: 100%;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-    }
-
     .container {
         padding: 0.5rem;
         display: grid;
-        grid-gap: 0.5rem;
+        grid-gap: 20px;
         grid-template-columns: repeat(20, 1fr);
         flex-wrap: wrap;
         width: 90vmin;
