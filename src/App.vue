@@ -15,45 +15,32 @@
     </SelectionArea>
 </template>
 
-<script>
+<script setup>
+    import { ref } from 'vue'
     import SelectionArea from "@viselect/vue"
 
-    export default {
-        components: { SelectionArea },
+    const selected = ref(new Set())
 
-        data()
-        {
-            return {
-                selected: new Set(),
-            }
-        },
+    function extractIds(elements) {
+        return elements.map((v) => v.getAttribute("data-key"))
+                       .filter(Boolean)
+                       .map(Number)
+    }
 
-        methods:
-        {
-            extractIds(elements)
-            {
-                return elements.map((v) => v.getAttribute("data-key"))
-                               .filter(Boolean)
-                               .map(Number)
-            },
+    function onStart({ event, selection }) {
+        if (!event?.ctrlKey && !event?.metaKey) {
+            selection.clearSelection()
+            selected.value.clear()
+        }
+    }
 
-            onStart({ event, selection })
-            {
-                if (!event?.ctrlKey && !event?.metaKey) {
-                    selection.clearSelection()
-                    this.selected.clear()
-                }
-            },
+    function onMove({ store: { changed: { added, removed } } }) {
+        extractIds(added).forEach((id) => selected.value.add(id))
+        extractIds(removed).forEach((id) => selected.value.delete(id))
+    }
 
-            onMove({ store: { changed: { added, removed } } }) {
-                this.extractIds(added).forEach((id) => this.selected.add(id))
-                this.extractIds(removed).forEach((id) => this.selected.delete(id))
-            },
-
-            range(to, offset = 0) {
-                return new Array(to).fill(0).map((_, i) => offset + i)
-            },
-        },
+    function range(to, offset = 0) {
+        return new Array(to).fill(0).map((_, i) => offset + i)
     }
 </script>
 
